@@ -10,8 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 
-const apiRoutes = require("./api");
-app.use("/", apiRoutes);
 
 
 const server = http.createServer(app);
