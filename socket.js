@@ -88,15 +88,13 @@ module.exports = (io) => {
         });
 
         socket.on("checkAnswer", ({ userExpression, originalExpression, answer, timeTaken, roomId }, callback) => {
-          // console.log(data)
-            // const { userExpression, originalExpression, answer, timeTaken, roomId } = data;
 
             try {
                 const userAnswer = eval(userExpression);
                 const expectedAnswer = Number(answer);
                 const isCorrect = Number(userAnswer) === expectedAnswer;
 
-                const time = Math.min(Math.max(Number(timeTaken), 0), 20); // clamp 0-20
+                const time = Math.min(Math.max(Number(timeTaken), 0), 20); 
 
                 firstCorrectExpression[roomId] = "";
 
@@ -107,7 +105,6 @@ module.exports = (io) => {
                     firstCorrectExpression: firstCorrectExpression[roomId],
                 };
 
-                // ✅ ตรวจว่าหมดเวลา (ตอบถูกแต่ช้าเกิน 20 วิ)
                 const isTimeout = time >= 20;
 
                 if (isCorrect) {
@@ -115,7 +112,7 @@ module.exports = (io) => {
 
                     if (!firstCorrectExpression[roomId]) {
                         firstCorrectExpression[roomId] = userExpression;
-                        console.log("✅ บันทึกวิธีคิดแรก:", userExpression);
+                        console.log("บันทึกวิธีคิดแรก:", userExpression);
                     }
 
                     if (callback) callback({
@@ -146,16 +143,13 @@ module.exports = (io) => {
             io.to(playerId).emit("setCorrect", { playerId });
         });
 
-        // ใส่ logic ที่เกี่ยวข้องกับ socket ที่นี่
         socket.on("disconnect", () => {
             console.log("User disconnected:", socket.id);
             const { roomCode, name } = socket.data;
             if (roomCode && rooms[roomCode]) {
-                // ลบผู้เล่นออกจากห้อง
                 rooms[roomCode] = rooms[roomCode].filter(p => p.id !== socket.id);
                 io.to(roomCode).emit("playerJoined", rooms[roomCode]);
 
-                // ถ้าห้องไม่มีใครเหลือแล้ว ก็ลบทิ้ง
                 if (rooms[roomCode].length === 0) {
                     delete rooms[roomCode];
                     console.log(`Room ${roomCode} deleted`);

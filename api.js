@@ -60,7 +60,7 @@ router.post("/check-answer", (req, res) => {
       firstCorrectExpression,
     };
 
-    // ✅ ตรวจว่าหมดเวลา (ตอบถูกแต่ช้าเกิน 20 วิ)
+
     const isTimeout = time >= 20;
 
     if (isCorrect) {
@@ -68,7 +68,7 @@ router.post("/check-answer", (req, res) => {
 
       if (!firstCorrectExpression) {
         firstCorrectExpression = userExpression;
-        console.log("✅ บันทึกวิธีคิดแรก:", userExpression);
+        console.log("บันทึกวิธีคิดแรก:", userExpression);
       }
 
       return res.json({
